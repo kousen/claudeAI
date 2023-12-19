@@ -9,11 +9,32 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class ClaudeServiceTest {
     @Autowired
     private ClaudeService claudeService;
+
+    @Test
+    void howManyRoads() {
+        var response = claudeService.getClaudeResponse("""
+            How many roads must a man walk down
+            Before you can call him a man?
+            """, ClaudeService.CLAUDE_2);
+        assertNotNull(response);
+        System.out.println(response);
+    }
+
+    @Test
+    void pirateCoverLetter() {
+        var response = claudeService.getClaudeResponse("""
+            Please write a cover letter for a Java developer
+            applying for an AI position, written in pirate speak.
+            """, ClaudeService.CLAUDE_2);
+        assertNotNull(response);
+        System.out.println(response);
+    }
 
     @Test
     void getClaudeResponseToHHG2tG_prompt_claude2() {

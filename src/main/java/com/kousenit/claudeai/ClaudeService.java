@@ -37,7 +37,7 @@ public class ClaudeService {
                 MAX_TOKENS_TO_SAMPLE,
                 temperature);
         ClaudeResponse response = claudeInterface.getCompletion(request);
-        logger.info(response.toString());
+        logger.debug(response.toString());
         return response.completion();
     }
 
