@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
-import static com.kousenit.gemini.GeminiStructure.*;
+import static com.kousenit.gemini.JsonStructure.*;
 
 @HttpExchange("/v1beta/models/")
 public interface GeminiInterface {

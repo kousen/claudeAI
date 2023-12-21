@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.util.List;
 
-public class GeminiStructure {
+public class JsonStructure {
 
     public record GeminiRequest(List<Content> contents) {}
     public record Content(List<Part> parts) {}
 
+    // "sealed" classes and interfaces:
+    // - only "permitted" classes can implement the interface
+    //   or extend the class
     public sealed interface Part
             permits TextPart, InlineDataPart {
     }

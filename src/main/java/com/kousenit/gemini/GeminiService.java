@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.util.Base64;
 import java.util.List;
 
-import static com.kousenit.gemini.GeminiStructure.*;
+import static com.kousenit.gemini.JsonStructure.*;
 
 @Service
 public class GeminiService {
