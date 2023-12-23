@@ -4,12 +4,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class GeminiServiceTest {
     @Autowired
     private GeminiService service;
+
+    @Test
+    void getCompletion_HHGtTG_question() {
+        String text = service.getCompletion("""
+            What is the Ultimate Answer to
+            the Ultimate Question of Life, the Universe,
+            and Everything?
+            """);
+        assertNotNull(text);
+        System.out.println(text);
+        assertThat(text).contains("42");
+    }
 
     @Test
     void getCompletion() {
@@ -43,7 +56,7 @@ class GeminiServiceTest {
     void describeAnImage() throws Exception {
         String text = service.getCompletionWithImage(
                 "Describe this image",
-                "ClaudeAI_in_Spring.png");
+                "A_cheerful_robot.png");
         assertNotNull(text);
         System.out.println(text);
     }

@@ -1,7 +1,6 @@
 package com.kousenit.gemini;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,20 +18,17 @@ public class GeminiService {
 
     private final GeminiInterface geminiInterface;
 
-    @Value("${googleai.api.key}")
-    private String apiKey;
-
     @Autowired
     public GeminiService(GeminiInterface geminiInterface) {
         this.geminiInterface = geminiInterface;
     }
 
     public GeminiResponse getCompletion(GeminiRequest request) {
-        return geminiInterface.getCompletion(GEMINI_PRO, request, apiKey);
+        return geminiInterface.getCompletion(GEMINI_PRO, request);
     }
 
     public GeminiResponse getCompletionWithImage(GeminiRequest request) {
-        return geminiInterface.getCompletion(GEMINI_PRO_VISION, request, apiKey);
+        return geminiInterface.getCompletion(GEMINI_PRO_VISION, request);
     }
 
     public String getCompletion(String text) {
@@ -49,6 +45,7 @@ public class GeminiService {
                                 Base64.getEncoder().encodeToString(Files.readAllBytes(
                                         Path.of("src/main/resources/", imageFileName))))))
                 ))));
+        System.out.println(response);
         return response.candidates().getFirst().content().parts().getFirst().text();
     }
 }
