@@ -28,7 +28,7 @@ class GeminiServiceTest {
     void getCompletion() {
         String text = service.getCompletion("""
             How many roads must a man walk down
-            Before you can call him a man?
+            before you can call him a man?
             """);
         assertNotNull(text);
         System.out.println(text);

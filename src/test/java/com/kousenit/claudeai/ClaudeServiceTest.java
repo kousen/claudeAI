@@ -20,7 +20,7 @@ class ClaudeServiceTest {
     void howManyRoads() {
         var response = claudeService.getClaudeResponse("""
             How many roads must a man walk down
-            Before you can call him a man?
+            before you can call him a man?
             """, ClaudeService.CLAUDE_2);
         assertNotNull(response);
         System.out.println(response);
@@ -64,7 +64,7 @@ class ClaudeServiceTest {
     void extractPerson_claude2() {
         int yearsFromNow = 2305 - LocalDate.now().getYear();
         var person = claudeService.extractPerson("""
-                Captain Picard was born on the 13th of juillet, %d years from now,
+                Captain Picard was born %d years from now on the 13th of juillet
                 in La Barre, France, Earth. His given name, Jean-Luc, is of French
                 origin and translates to "John Luke".
                 """.formatted(yearsFromNow),
@@ -81,7 +81,7 @@ class ClaudeServiceTest {
     void extractPerson_claude_instant() {
         int yearsFromNow = 2305 - LocalDate.now().getYear();
         var person = claudeService.extractPerson("""
-                Captain Picard was born on the 13th of juillet, %d years from now,
+                Captain Picard was born %d years from now on the 13th of juillet,
                 in La Barre, France, Earth. His given name, Jean-Luc, is of French
                 origin and translates to "John Luke".
                 """.formatted(yearsFromNow),

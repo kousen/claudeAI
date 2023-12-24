@@ -56,10 +56,11 @@ public class ClaudeService {
 
     public Person extractPerson(String prompt, String model, double temperature) {
         String systemPrompt = """
-                Here is a Java record representing a person:
-                    record Person(String firstName, String lastName,
-                            String origin,
-                            LocalDate dob) {}
+                In the classpath is a Java record representing a Person. It is annotated
+                with @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class), which
+                configures Jackson to use snake_case for the JSON field names firstName
+                and lastName. The "dob" field is a LocalDate.
+                
                 Please extract the relevant fields from the <person> tags in the next
                 message into a JSON representation of a Person object. The "origin"
                 field represents the place of birth.
