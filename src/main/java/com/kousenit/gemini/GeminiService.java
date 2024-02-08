@@ -14,6 +14,7 @@ import static com.kousenit.gemini.JsonStructure.*;
 @Service
 public class GeminiService {
     public static final String GEMINI_PRO = "gemini-pro";
+    public static final String GEMINI_ULTIMATE = "gemini-ultimate";
     public static final String GEMINI_PRO_VISION = "gemini-pro-vision";
 
     private final GeminiInterface geminiInterface;
@@ -23,9 +24,18 @@ public class GeminiService {
         this.geminiInterface = geminiInterface;
     }
 
+    public JsonStructure.ModelList getModels() {
+        return geminiInterface.getModels();
+    }
+
     public GeminiResponse getCompletion(GeminiRequest request) {
         return geminiInterface.getCompletion(GEMINI_PRO, request);
     }
+
+    public GeminiResponse getCompletionWithModel(String model, GeminiRequest request) {
+        return geminiInterface.getCompletion(model, request);
+    }
+
 
     public GeminiResponse getCompletionWithImage(GeminiRequest request) {
         return geminiInterface.getCompletion(GEMINI_PRO_VISION, request);

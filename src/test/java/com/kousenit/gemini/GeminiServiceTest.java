@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -61,4 +63,29 @@ class GeminiServiceTest {
         System.out.println(text);
     }
 
+    @Test
+    void getModels() {
+        JsonStructure.ModelList models = service.getModels();
+        assertNotNull(models);
+        models.models().stream()
+                .map(JsonStructure.Model::name)
+                .filter(name -> name.contains("gemini"))
+                .forEach(System.out::println);
+    }
+
+    @Test
+    void getCompletionWithModel() {
+        String question = """
+            What is the Ultimate Answer to
+            the Ultimate Question of Life, the Universe,
+            and Everything?
+            """;
+        JsonStructure.GeminiResponse response = service.getCompletionWithModel(
+                GeminiService.GEMINI_ULTIMATE,
+                new JsonStructure.GeminiRequest(
+                        List.of(new JsonStructure.Content(List.of(new JsonStructure.TextPart(question))))));
+        String text = response.candidates().getFirst().content().parts().getFirst().text();
+        assertNotNull(text);
+        System.out.println(text);
+    }
 }

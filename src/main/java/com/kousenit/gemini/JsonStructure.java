@@ -32,4 +32,21 @@ public class JsonStructure {
 
     public record SafetyRating(String category, String probability) { }
     public record PromptFeedback(List<SafetyRating> safetyRatings) { }
+
+
+    // Models
+    public record ModelList(List<Model> models) {}
+
+    public record Model(
+            String name,
+            String version,
+            String displayName,
+            String description,
+            int inputTokenLimit,
+            int outputTokenLimit,
+            List<String> supportedGenerationMethods,
+            double temperature,
+            double topP,
+            int topK
+    ) {}
 }

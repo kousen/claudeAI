@@ -30,7 +30,8 @@ public class ClaudeService {
         return getClaudeResponse("", prompt, model, DEFAULT_TEMPERATURE);
     }
 
-    public String getClaudeResponse(String system, String prompt, String model, double temperature) {
+    public String getClaudeResponse(String system, String prompt,
+                                    String model, double temperature) {
         ClaudeRequest request = new ClaudeRequest(
                 model,
                 formatWithSystemPrompt(system, prompt),
