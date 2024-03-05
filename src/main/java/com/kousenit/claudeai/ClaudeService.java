@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +18,8 @@ public class ClaudeService {
 
     public final static String CLAUDE_2 = "claude-2";
     public final static String CLAUDE_INSTANT_1 = "claude-instant-1";
+    public final static String CLAUDE_3_SONNET = "claude-3-sonnet-20240229";
+    public final static String CLAUDE_3_OPUS = "claude-3-opus-20240229";
 
     private final ClaudeInterface claudeInterface;
     private final ObjectMapper mapper;
@@ -40,6 +43,17 @@ public class ClaudeService {
         ClaudeResponse response = claudeInterface.getCompletion(request);
         logger.debug(response.toString());
         return response.completion();
+    }
+
+    public ClaudeMessageResponse getClaudeMessageResponse(String prompt, String model) {
+        ClaudeMessageRequest request = new ClaudeMessageRequest(
+                model,
+                "",
+                MAX_TOKENS_TO_SAMPLE,
+                DEFAULT_TEMPERATURE,
+                List.of(new ClaudeMessageRequest.Message("user", prompt))
+        );
+        return claudeInterface.getMessageResponse(request);
     }
 
     // System prompts provide context and are provided before the first Human: prompt

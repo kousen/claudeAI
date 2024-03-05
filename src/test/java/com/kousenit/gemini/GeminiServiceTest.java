@@ -1,5 +1,6 @@
 package com.kousenit.gemini;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -73,8 +74,8 @@ class GeminiServiceTest {
                 .forEach(System.out::println);
     }
 
-    @Test
-    void getCompletionWithModel() {
+    @Test @Disabled("Ultimate model not yet available")
+    void getCompletionWithUltimateModel() {
         String question = """
             What is the Ultimate Answer to
             the Ultimate Question of Life, the Universe,
