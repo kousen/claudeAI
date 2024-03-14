@@ -18,6 +18,8 @@ public class ClaudeService {
 
     public final static String CLAUDE_2 = "claude-2";
     public final static String CLAUDE_INSTANT_1 = "claude-instant-1";
+
+    public final static String CLAUDE_3_HAIKU = "claude-3-haiku-20240307";
     public final static String CLAUDE_3_SONNET = "claude-3-sonnet-20240229";
     public final static String CLAUDE_3_OPUS = "claude-3-opus-20240229";
 

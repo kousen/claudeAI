@@ -75,6 +75,36 @@ class ClaudeServiceTest {
     }
 
     @Test
+    void calculatorTest_haiku() {
+        String question = """
+                Show each step of the calculation.
+                What is the square root of the sum of the numbers of letters
+                in the words "hello" and "world"?
+                """;
+        var response = claudeService.getClaudeMessageResponse(question, ClaudeService.CLAUDE_3_HAIKU);
+        System.out.println(response);
+        assertThat(response.content()
+                .getFirst()
+                .text()).contains("3.16");
+    }
+
+    @Test
+    void haikuTest_haiku() {
+        String question = """
+                Write a haiku about Java development
+                with AI tools
+                """;
+        var response = claudeService.getClaudeMessageResponse(question, ClaudeService.CLAUDE_3_HAIKU);
+        System.out.println(response.model());
+        System.out.println(response.usage());
+        String poem = response.content()
+                .getFirst()
+                .text();
+        System.out.println(poem);
+        assertThat(poem).isNotBlank();
+    }
+
+    @Test
     void calculatorTest_sonnet() {
         String question = """
                 Show each step of the calculation.
