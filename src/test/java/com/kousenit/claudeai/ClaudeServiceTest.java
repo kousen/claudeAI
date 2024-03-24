@@ -81,7 +81,8 @@ class ClaudeServiceTest {
                 What is the square root of the sum of the numbers of letters
                 in the words "hello" and "world"?
                 """;
-        var response = claudeService.getClaudeMessageResponse(question, ClaudeService.CLAUDE_3_HAIKU);
+        var response = claudeService.getClaudeMessageResponse(
+                question, ClaudeService.CLAUDE_3_HAIKU);
         System.out.println(response);
         assertThat(response.content()
                 .getFirst()
@@ -92,14 +93,16 @@ class ClaudeServiceTest {
     void haikuTest_haiku() {
         String question = """
                 Write a haiku about Java development
-                with AI tools
+                with AI tools.
+                Remember that in a haiku, the first line
+                should have 5 syllables, the second line 7 syllables,
+                and the third line 5 syllables.
                 """;
-        var response = claudeService.getClaudeMessageResponse(question, ClaudeService.CLAUDE_3_HAIKU);
+        var response = claudeService.getClaudeMessageResponse(
+                question, ClaudeService.CLAUDE_3_HAIKU);
         System.out.println(response.model());
         System.out.println(response.usage());
-        String poem = response.content()
-                .getFirst()
-                .text();
+        String poem = response.content().getFirst().text();
         System.out.println(poem);
         assertThat(poem).isNotBlank();
     }
@@ -111,7 +114,8 @@ class ClaudeServiceTest {
                 What is the square root of the sum of the numbers of letters
                 in the words "hello" and "world"?
                 """;
-        var response = claudeService.getClaudeMessageResponse(question, ClaudeService.CLAUDE_3_SONNET);
+        var response = claudeService.getClaudeMessageResponse(
+                question, ClaudeService.CLAUDE_3_SONNET);
         System.out.println(response);
         assertThat(response.content()
                 .getFirst()

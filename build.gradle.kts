@@ -14,6 +14,7 @@ java {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.jsoup:jsoup:1.17.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
