@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import static com.kousenit.claudeai.ClaudeMessageRequest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,6 +17,48 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ClaudeServiceTest {
     @Autowired
     private ClaudeService claudeService;
+
+    @Test
+    void independentQuestions() {
+        var response = claudeService.getClaudeMessageResponse(
+                new ClaudeMessageRequest(
+                        ClaudeService.CLAUDE_3_HAIKU,
+                        "",
+                        1024,
+                        0.3,
+                        List.of(
+                                new Message("user", """
+                                        I'm the person who ran the mutant lab that
+                                        turned Wade Wilson into DeadPool in the movie.
+                                        What is my supervillain name?""")
+                        )));
+        System.out.println(response);
+        response = claudeService.getClaudeMessageResponse(
+                new ClaudeMessageRequest(
+                        ClaudeService.CLAUDE_3_HAIKU,
+                        "",
+                        1024,
+                        0.3,
+                        List.of(
+                                new Message("user", """
+                                        What did DeadPool call me in the movie?""")
+                        )));
+        System.out.println(response);
+    }
+
+    @Test
+    void conversation() {
+        var response = claudeService.getClaudeMessageResponse(
+                ClaudeService.CLAUDE_3_HAIKU, """
+                        I'm the person who ran the mutant lab that
+                        turned Wade Wilson into DeadPool in the movie.
+                        """,
+                "What is my supervillain name?",
+                "Your supervillain name is Ajax.",
+                "What's my name?");
+        System.out.println(response.content().getFirst().text());
+    }
+
 
     @Test
     void howManyRoads() {
@@ -102,7 +146,9 @@ class ClaudeServiceTest {
                 question, ClaudeService.CLAUDE_3_HAIKU);
         System.out.println(response.model());
         System.out.println(response.usage());
-        String poem = response.content().getFirst().text();
+        String poem = response.content()
+                .getFirst()
+                .text();
         System.out.println(poem);
         assertThat(poem).isNotBlank();
     }

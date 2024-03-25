@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 @Service
 public class ClaudeService {
@@ -58,6 +59,22 @@ public class ClaudeService {
         return claudeInterface.getMessageResponse(request);
     }
 
+    public ClaudeMessageResponse getClaudeMessageResponse(ClaudeMessageRequest request) {
+        return claudeInterface.getMessageResponse(request);
+    }
+
+    public ClaudeMessageResponse getClaudeMessageResponse(String model, String system, String... messages) {
+        // Create a list of Message objects from the messages where the first message is a system message
+        // and the rest alternate between "assistant" and "user"
+        String[] types = {"user", "assistant"};
+
+        var userMessages = IntStream.range(0, messages.length)
+                .mapToObj(i -> new ClaudeMessageRequest.Message(types[i % 2], messages[i]))
+                .toList();
+        return getClaudeMessageResponse(
+                new ClaudeMessageRequest(model, system, 1024, 0.3, userMessages));
+    }
+
     // System prompts provide context and are provided before the first Human: prompt
     private String formatWithSystemPrompt(String system, String prompt) {
         if (system.isEmpty()) {
@@ -77,7 +94,7 @@ public class ClaudeService {
                 with @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class), which
                 configures Jackson to use snake_case for the JSON field names firstName
                 and lastName. The "dob" field is a LocalDate.
-                
+                                
                 Please extract the relevant fields from the <person> tags in the next
                 message into a JSON representation of a Person object. The "origin"
                 field represents the place of birth.
@@ -98,7 +115,7 @@ public class ClaudeService {
         String json = response;
         Pattern pattern = Pattern.compile("```json\n(.*)\n```", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(response);
-        if(matcher.find()){
+        if (matcher.find()) {
             json = matcher.group(1);
         }
         logger.debug("Extracted: " + json);
