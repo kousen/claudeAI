@@ -76,7 +76,6 @@ public class BookDownloader {
         return sections.stream()
                 .map(section -> claudeService.getClaudeMessageResponse(
                         String.format(PROMPT_TEMPLATE, section), ClaudeService.CLAUDE_3_HAIKU))
-                .map(claudeMessageResponse -> claudeMessageResponse.content().getFirst().text())
                 .collect(Collectors.toList());
     }
 }
