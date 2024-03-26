@@ -8,10 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.kousenit.claudeai.ClaudeMessageRequest.*;
+import static com.kousenit.claudeai.ClaudeRecords.*;
+import static com.kousenit.claudeai.ClaudeRecords.ClaudeMessageRequest.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ClaudeServiceTest {
@@ -19,30 +19,39 @@ class ClaudeServiceTest {
     private ClaudeService claudeService;
 
     @Test
+    void testGetMessageResponse() {
+        ClaudeMessageRequest request = new ClaudeMessageRequest(
+                ClaudeService.CLAUDE_3_OPUS,
+                "",
+                1024,
+                0.3,
+                List.of(new Message("user", new StringContent("Hello, world")))
+        );
+        System.out.println(request);
+        ClaudeMessageResponse response = claudeService.getClaudeMessageResponse(request);
+        assertNotNull(response);
+        assertAll(
+                () -> assertEquals(ClaudeService.CLAUDE_3_OPUS, response.model()),
+                () -> assertEquals("assistant", response.role()),
+                () -> assertEquals("end_turn", response.stopReason()),
+                () -> assertEquals("text", response.content()
+                        .getFirst()
+                        .type())
+        );
+    }
+
+    @Test
     void independentQuestions() {
         var response = claudeService.getClaudeMessageResponse(
-                new ClaudeMessageRequest(
-                        ClaudeService.CLAUDE_3_HAIKU,
-                        "",
-                        1024,
-                        0.3,
-                        List.of(
-                                new Message("user", """
-                                        I'm the person who ran the mutant lab that
-                                        turned Wade Wilson into DeadPool in the movie.
-                                        What is my supervillain name?""")
-                        )));
+                """
+                        I'm the person who ran the mutant lab that
+                        turned Wade Wilson into DeadPool in the movie.
+                        What is my supervillain name?""",
+                ClaudeService.CLAUDE_3_HAIKU);
         System.out.println(response);
-        response = claudeService.getClaudeMessageResponse(
-                new ClaudeMessageRequest(
-                        ClaudeService.CLAUDE_3_HAIKU,
-                        "",
-                        1024,
-                        0.3,
-                        List.of(
-                                new Message("user", """
-                                        What did DeadPool call me in the movie?""")
-                        )));
+        response = claudeService.getClaudeMessageResponse("""
+                        What did DeadPool call me in the movie?""",
+                ClaudeService.CLAUDE_3_HAIKU);
         System.out.println(response);
     }
 
@@ -56,7 +65,9 @@ class ClaudeServiceTest {
                 "What is my supervillain name?",
                 "Your supervillain name is Ajax.",
                 "What's my name?");
-        System.out.println(response.content().getFirst().text());
+        System.out.println(response.content()
+                .getFirst()
+                .text());
     }
 
 
@@ -89,9 +100,7 @@ class ClaudeServiceTest {
                 """;
         var response = claudeService.getClaudeMessageResponse(question, ClaudeService.CLAUDE_3_OPUS);
         System.out.println(response);
-        assertThat(response.content()
-                .getFirst()
-                .text()).contains("Ahoy");
+        assertThat(response).contains("Ahoy");
     }
 
     @Test
@@ -128,9 +137,7 @@ class ClaudeServiceTest {
         var response = claudeService.getClaudeMessageResponse(
                 question, ClaudeService.CLAUDE_3_HAIKU);
         System.out.println(response);
-        assertThat(response.content()
-                .getFirst()
-                .text()).contains("3.16");
+        assertThat(response).contains("3.16");
     }
 
     @Test
@@ -144,13 +151,8 @@ class ClaudeServiceTest {
                 """;
         var response = claudeService.getClaudeMessageResponse(
                 question, ClaudeService.CLAUDE_3_HAIKU);
-        System.out.println(response.model());
-        System.out.println(response.usage());
-        String poem = response.content()
-                .getFirst()
-                .text();
-        System.out.println(poem);
-        assertThat(poem).isNotBlank();
+        System.out.println(response);
+        assertThat(response).isNotBlank();
     }
 
     @Test
@@ -163,9 +165,7 @@ class ClaudeServiceTest {
         var response = claudeService.getClaudeMessageResponse(
                 question, ClaudeService.CLAUDE_3_SONNET);
         System.out.println(response);
-        assertThat(response.content()
-                .getFirst()
-                .text()).contains("3.16");
+        assertThat(response).contains("3.16");
     }
 
     @Test
@@ -177,9 +177,7 @@ class ClaudeServiceTest {
                 """;
         var response = claudeService.getClaudeMessageResponse(question, ClaudeService.CLAUDE_3_OPUS);
         System.out.println(response);
-        assertThat(response.content()
-                .getFirst()
-                .text()).contains("3.16");
+        assertThat(response).contains("3.16");
     }
 
     @Test

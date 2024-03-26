@@ -11,6 +11,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import static com.kousenit.claudeai.ClaudeRecords.ClaudeMessageRequest.*;
+import static com.kousenit.claudeai.ClaudeRecords.*;
+
 @Service
 public class ClaudeService {
     public static final Logger logger = LoggerFactory.getLogger(ClaudeService.class);
@@ -48,15 +51,15 @@ public class ClaudeService {
         return response.completion();
     }
 
-    public ClaudeMessageResponse getClaudeMessageResponse(String prompt, String model) {
+    public String getClaudeMessageResponse(String prompt, String model) {
         ClaudeMessageRequest request = new ClaudeMessageRequest(
                 model,
                 "",
                 MAX_TOKENS_TO_SAMPLE,
                 DEFAULT_TEMPERATURE,
-                List.of(new ClaudeMessageRequest.Message("user", prompt))
+                List.of(new Message("user", new StringContent(prompt)))
         );
-        return claudeInterface.getMessageResponse(request);
+        return claudeInterface.getMessageResponse(request).content().getFirst().text();
     }
 
     public ClaudeMessageResponse getClaudeMessageResponse(ClaudeMessageRequest request) {
@@ -65,11 +68,11 @@ public class ClaudeService {
 
     public ClaudeMessageResponse getClaudeMessageResponse(String model, String system, String... messages) {
         // Create a list of Message objects from the messages where the first message is a system message
-        // and the rest alternate between "assistant" and "user"
+        // and the rest alternate between "user" and "assistant"
         String[] types = {"user", "assistant"};
 
         var userMessages = IntStream.range(0, messages.length)
-                .mapToObj(i -> new ClaudeMessageRequest.Message(types[i % 2], messages[i]))
+                .mapToObj(i -> new Message(types[i % 2], new StringContent(messages[i])))
                 .toList();
         return getClaudeMessageResponse(
                 new ClaudeMessageRequest(model, system, 1024, 0.3, userMessages));

@@ -1,9 +1,13 @@
 package com.kousenit.config;
 
 import com.kousenit.claudeai.ClaudeInterface;
+import com.kousenit.claudeai.ClaudeRecords;
+import com.kousenit.claudeai.ContentListSerializer;
+import com.kousenit.claudeai.StringContentSerializer;
 import com.kousenit.gemini.GeminiInterface;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
@@ -49,4 +53,10 @@ public class AppConfig {
         return factory.createClient(GeminiInterface.class);
     }
 
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer addCustomSerialization() {
+        return builder ->
+                builder.serializerByType(ClaudeRecords.StringContent.class, new StringContentSerializer())
+                        .serializerByType(ClaudeRecords.ContentList.class, new ContentListSerializer());
+    }
 }
