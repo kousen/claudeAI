@@ -34,7 +34,7 @@ public class JsonSerializerTest {
     @Test
     public void testClaudeMessageRequestSerialization() throws Exception {
         ClaudeMessageRequest request = new ClaudeMessageRequest(
-                "claude-3-haiku-20240307",
+                ClaudeService.CLAUDE_3_HAIKU,
                 "",
                 1024,
                 0.3,

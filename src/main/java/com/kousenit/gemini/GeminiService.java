@@ -9,12 +9,12 @@ import java.nio.file.Path;
 import java.util.Base64;
 import java.util.List;
 
-import static com.kousenit.gemini.JsonStructure.*;
+import static com.kousenit.gemini.GeminiRecords.*;
 
 @Service
 public class GeminiService {
     public static final String GEMINI_PRO = "gemini-pro";
-    public static final String GEMINI_ULTIMATE = "gemini-ultimate";
+    public static final String GEMINI_1_5_PRO = "gemini-1.5-pro-latest";
     public static final String GEMINI_PRO_VISION = "gemini-pro-vision";
 
     private final GeminiInterface geminiInterface;
@@ -24,8 +24,18 @@ public class GeminiService {
         this.geminiInterface = geminiInterface;
     }
 
-    public JsonStructure.ModelList getModels() {
+    public GeminiRecords.ModelList getModels() {
         return geminiInterface.getModels();
+    }
+
+    public GeminiCountResponse countTokens(String model, GeminiRequest request) {
+        return geminiInterface.countTokens(model, request);
+    }
+
+    public int countTokens(String text) {
+        GeminiCountResponse response = countTokens(GEMINI_PRO, new GeminiRequest(
+                List.of(new Content(List.of(new TextPart(text))))));
+        return response.totalTokens();
     }
 
     public GeminiResponse getCompletion(GeminiRequest request) {

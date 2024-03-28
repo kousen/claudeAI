@@ -1,12 +1,12 @@
 package com.kousenit.gemini;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.kousenit.gemini.GeminiRecords.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -66,27 +66,62 @@ class GeminiServiceTest {
 
     @Test
     void getModels() {
-        JsonStructure.ModelList models = service.getModels();
+        ModelList models = service.getModels();
         assertNotNull(models);
         models.models().stream()
-                .map(JsonStructure.Model::name)
+                .map(Model::name)
                 .filter(name -> name.contains("gemini"))
                 .forEach(System.out::println);
     }
 
-    @Test @Disabled("Ultimate model not yet available")
-    void getCompletionWithUltimateModel() {
-        String question = """
-            What is the Ultimate Answer to
-            the Ultimate Question of Life, the Universe,
-            and Everything?
-            """;
-        JsonStructure.GeminiResponse response = service.getCompletionWithModel(
-                GeminiService.GEMINI_ULTIMATE,
-                new JsonStructure.GeminiRequest(
-                        List.of(new JsonStructure.Content(List.of(new JsonStructure.TextPart(question))))));
+    @Test
+    void getCompletionWith15Pro() throws Exception {
+        var textExtractor = new PDFTextExtractor();
+        String hybhy = textExtractor.extractText(
+                "src/main/resources/help-your-boss-help-you_P1.0.pdf");
+
+        String prompt = """
+            Here is the text from the book "Help Your Boss Help You":
+            
+            %s
+            
+            Answer the following question based on information
+            contained in the book:
+            
+            %s
+            """.formatted(hybhy, """
+                        How can you apply the principles of the Prisoner's Dilemma
+                        to the employee/manager relationship?
+                        """);
+
+        GeminiResponse response = service.getCompletionWithModel(
+                GeminiService.GEMINI_1_5_PRO,
+                new GeminiRequest(
+                        List.of(new Content(
+                                List.of(new TextPart(prompt))))));
+        System.out.println(response);
         String text = response.candidates().getFirst().content().parts().getFirst().text();
         assertNotNull(text);
         System.out.println(text);
+        System.out.println("Input Tokens : " + service.countTokens(prompt));
+        System.out.println("Output Tokens: " + service.countTokens(text));
     }
+
+    @Test
+    void countTokens_fullRequest() {
+        var request = new GeminiRequest(
+                List.of(new Content(
+                        List.of(new TextPart("What is the airspeed velocity of an unladen swallow?")))));
+        GeminiCountResponse response = service.countTokens(GeminiService.GEMINI_PRO, request);
+        assertNotNull(response);
+        System.out.println(response.totalTokens());
+        assertThat(response.totalTokens()).isEqualTo(12);
+    }
+
+    @Test
+    void countTokens() {
+        int totalTokens = service.countTokens("What is the airspeed velocity of an unladen swallow?");
+        assertThat(totalTokens).isEqualTo(12);
+    }
+
 }

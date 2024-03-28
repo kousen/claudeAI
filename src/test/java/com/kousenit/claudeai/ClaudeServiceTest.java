@@ -1,5 +1,7 @@
 package com.kousenit.claudeai;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,11 @@ class ClaudeServiceTest {
     @Autowired
     private ClaudeService claudeService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
-    void testGetMessageResponse() {
+    void testGetMessageResponse() throws JsonProcessingException {
         ClaudeMessageRequest request = new ClaudeMessageRequest(
                 ClaudeService.CLAUDE_3_OPUS,
                 "",
@@ -27,16 +32,14 @@ class ClaudeServiceTest {
                 0.3,
                 List.of(new Message("user", new StringContent("Hello, world")))
         );
-        System.out.println(request);
+        System.out.println(objectMapper.writeValueAsString(request));
         ClaudeMessageResponse response = claudeService.getClaudeMessageResponse(request);
         assertNotNull(response);
         assertAll(
                 () -> assertEquals(ClaudeService.CLAUDE_3_OPUS, response.model()),
                 () -> assertEquals("assistant", response.role()),
                 () -> assertEquals("end_turn", response.stopReason()),
-                () -> assertEquals("text", response.content()
-                        .getFirst()
-                        .type())
+                () -> assertEquals("text", response.content().getFirst().type())
         );
     }
 

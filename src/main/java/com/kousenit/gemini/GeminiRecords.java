@@ -2,7 +2,7 @@ package com.kousenit.gemini;
 
 import java.util.List;
 
-public class JsonStructure {
+public class GeminiRecords {
 
     public record GeminiRequest(List<Content> contents) {}
     public record Content(List<Part> parts) {}
@@ -33,6 +33,8 @@ public class JsonStructure {
     public record SafetyRating(String category, String probability) { }
     public record PromptFeedback(List<SafetyRating> safetyRatings) { }
 
+    // Returned from "count" endpoint
+    public record GeminiCountResponse(int totalTokens) { }
 
     // Models
     public record ModelList(List<Model> models) {}

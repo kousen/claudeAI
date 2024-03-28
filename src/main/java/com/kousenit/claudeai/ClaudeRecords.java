@@ -29,7 +29,12 @@ public class ClaudeRecords {
 
     public record ContentList(List<Content> contents) implements MessageContent {}
 
-    public record StringContent(String text) implements MessageContent {}
+    public record StringContent(String text) implements MessageContent {
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
 
     public record ClaudeMessageResponse(
             String id,
