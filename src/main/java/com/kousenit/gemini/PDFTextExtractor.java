@@ -3,6 +3,7 @@ package com.kousenit.gemini;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.ocr.TesseractOCRConfig;
 import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.sax.BodyContentHandler;
@@ -10,9 +11,10 @@ import org.xml.sax.SAXException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class PDFTextExtractor {
-    public int countWords(String text) {
+    public static int countWords(String text) {
         if (text == null || text.isEmpty()) {
             return 0;
         }
@@ -21,13 +23,14 @@ public class PDFTextExtractor {
         return words.length;
     }
 
-    public String extractText(String pdfFilePath) throws IOException, TikaException, SAXException {
-        // Create a content handler
-        BodyContentHandler handler = new BodyContentHandler(-1);
+    public static String extractText(String pdfFilePath) throws IOException, TikaException, SAXException {
+        Parser pdfParser = new PDFParser();
 
-        // Create a metadata object
+        // Remove the limit on file size
+        BodyContentHandler handler = new BodyContentHandler(-1);
         Metadata metadata = new Metadata();
-        try (FileInputStream inputstream = new FileInputStream(pdfFilePath)) {
+
+        try (InputStream inputstream = new FileInputStream(pdfFilePath)) {
             // Skip OCR processing
             ParseContext context = new ParseContext();
             TesseractOCRConfig config = new TesseractOCRConfig();
@@ -35,19 +38,8 @@ public class PDFTextExtractor {
             context.set(TesseractOCRConfig.class, config);
 
             // Parse the PDF file
-            PDFParser pdfParser = new PDFParser();
             pdfParser.parse(inputstream, handler, metadata, context);
         }
-
         return handler.toString();
-    }
-
-
-    public static void main(String[] args) throws IOException, TikaException, SAXException {
-        // Path to the PDF file
-        String pdfFilePath = "src/main/resources/help-your-boss-help-you_P1.0.pdf";
-        var extractor = new PDFTextExtractor();
-        String text = extractor.extractText(pdfFilePath);
-        System.out.println("Approximate word count:" + extractor.countWords(text));
     }
 }

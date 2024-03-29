@@ -76,9 +76,8 @@ class GeminiServiceTest {
 
     @Test
     void getCompletionWith15Pro() throws Exception {
-        var textExtractor = new PDFTextExtractor();
-        String hybhy = textExtractor.extractText(
-                "src/main/resources/help-your-boss-help-you_P1.0.pdf");
+        String hybhy = PDFTextExtractor.extractText(
+                "src/main/resources/pdfs/help-your-boss-help-you_P1.0.pdf");
 
         String prompt = """
             Here is the text from the book "Help Your Boss Help You":
@@ -89,16 +88,11 @@ class GeminiServiceTest {
             contained in the book:
             
             %s
-            """.formatted(hybhy, """
-                        How can you apply the principles of the Prisoner's Dilemma
-                        to the employee/manager relationship?
-                        """);
+            """.formatted(hybhy, "What are the top five major points made in the book?");
 
         GeminiResponse response = service.getCompletionWithModel(
                 GeminiService.GEMINI_1_5_PRO,
-                new GeminiRequest(
-                        List.of(new Content(
-                                List.of(new TextPart(prompt))))));
+                new GeminiRequest(List.of(new Content(List.of(new TextPart(prompt))))));
         System.out.println(response);
         String text = response.candidates().getFirst().content().parts().getFirst().text();
         assertNotNull(text);

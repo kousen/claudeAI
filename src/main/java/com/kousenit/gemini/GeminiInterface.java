@@ -24,7 +24,4 @@ public interface GeminiInterface {
     GeminiResponse getCompletion(
             @PathVariable String model,
             @RequestBody GeminiRequest request);
-
-
-
 }
