@@ -118,4 +118,12 @@ class GeminiServiceTest {
         assertThat(totalTokens).isEqualTo(12);
     }
 
+    @Test
+    void countBookTokens() throws Exception {
+        String hybhy = PDFTextExtractor.extractText(
+                "src/main/resources/pdfs/help-your-boss-help-you_P1.0.pdf");
+        int totalTokens = service.countTokens(hybhy);
+        System.out.println(totalTokens);
+    }
+
 }
