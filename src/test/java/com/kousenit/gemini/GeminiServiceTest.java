@@ -65,6 +65,34 @@ class GeminiServiceTest {
     }
 
     @Test
+    void countItems_gemini_pro() throws Exception {
+        String text = service.getCompletionWithImage(
+                """
+                This is a picture from the food pantry. It contains
+                shelves labeled "canned goods", "snacks", and
+                "menstrual care". On the shelf labeled "canned goods",
+                how many cans of food are there?
+                """,
+                "foodnstuff_picture.png");
+        assertNotNull(text);
+        System.out.println(text);
+    }
+
+    @Test
+    void countItems_gemini_1_5() throws Exception {
+        String text = service.analyzeImage(
+                """
+                This is a picture from the food pantry. It contains
+                shelves labeled "canned goods", "snacks", and
+                "menstrual care". On the shelf labeled "canned goods",
+                how many cans of food are there?
+                """,
+                "foodnstuff_picture.png");
+        assertNotNull(text);
+        System.out.println(text);
+    }
+
+    @Test
     void getModels() {
         ModelList models = service.getModels();
         assertNotNull(models);

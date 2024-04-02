@@ -51,6 +51,10 @@ public class GeminiService {
         return geminiInterface.getCompletion(GEMINI_PRO_VISION, request);
     }
 
+    public GeminiResponse analyzeImage(GeminiRequest request) {
+        return geminiInterface.getCompletion(GEMINI_1_5_PRO, request);
+    }
+
     public String getCompletion(String text) {
         GeminiResponse response = getCompletion(new GeminiRequest(
                 List.of(new Content(List.of(new TextPart(text))))));
@@ -59,6 +63,18 @@ public class GeminiService {
 
     public String getCompletionWithImage(String text, String imageFileName) throws IOException {
         GeminiResponse response = getCompletionWithImage(
+                new GeminiRequest(List.of(new Content(List.of(
+                        new TextPart(text),
+                        new InlineDataPart(new InlineData("image/png",
+                                Base64.getEncoder().encodeToString(Files.readAllBytes(
+                                        Path.of("src/main/resources/", imageFileName))))))
+                ))));
+        System.out.println(response);
+        return response.candidates().getFirst().content().parts().getFirst().text();
+    }
+
+    public String analyzeImage(String text, String imageFileName) throws IOException {
+        GeminiResponse response = analyzeImage(
                 new GeminiRequest(List.of(new Content(List.of(
                         new TextPart(text),
                         new InlineDataPart(new InlineData("image/png",
