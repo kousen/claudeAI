@@ -8,6 +8,7 @@ import java.io.IOException;
 import static com.kousenit.claudeai.ClaudeRecords.*;
 
 public class StringContentSerializer extends StdSerializer<StringContent> {
+
     public StringContentSerializer() {
         super(StringContent.class);
     }

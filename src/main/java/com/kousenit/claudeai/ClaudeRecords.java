@@ -17,6 +17,8 @@ public class ClaudeRecords {
 
     sealed interface MessageContent permits StringContent, ContentList {}
 
+    public record ContentList(List<Content> contents) implements MessageContent {}
+
     sealed interface Content permits ImageContent, TextContent {}
 
     public record ImageContent(String type, ImageSource source) implements Content {
@@ -26,8 +28,6 @@ public class ClaudeRecords {
     }
 
     public record TextContent(String type, String text) implements Content {}
-
-    public record ContentList(List<Content> contents) implements MessageContent {}
 
     public record StringContent(String text) implements MessageContent {
         @Override

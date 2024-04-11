@@ -97,7 +97,7 @@ public class ClaudeService {
                 with @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class), which
                 configures Jackson to use snake_case for the JSON field names firstName
                 and lastName. The "dob" field is a LocalDate.
-                                
+                
                 Please extract the relevant fields from the <person> tags in the next
                 message into a JSON representation of a Person object. The "origin"
                 field represents the place of birth.
@@ -121,7 +121,7 @@ public class ClaudeService {
         if (matcher.find()) {
             json = matcher.group(1);
         }
-        logger.debug("Extracted: " + json);
+        logger.debug("Extracted: {}", json);
         return json;
     }
 }

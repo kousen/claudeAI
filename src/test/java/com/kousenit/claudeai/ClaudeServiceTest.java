@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.kousenit.claudeai.ClaudeRecords.*;
-import static com.kousenit.claudeai.ClaudeRecords.ClaudeMessageRequest.*;
+import static com.kousenit.claudeai.ClaudeRecords.ClaudeMessageRequest.Message;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
